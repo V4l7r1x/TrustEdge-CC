@@ -80,13 +80,14 @@ class AttackSimPayload(BaseModel):
 # --- HTML Frontend Route ---
 @app.get("/", response_class=HTMLResponse)
 async def serve_dashboard(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 # --- REST API Endpoints ---
 @app.post("/api/nodes/register")
 async def register_node(payload: RegisterNodePayload):
-    result = orchestrator.register_node(payload.dict())
+    data = payload.model_dump() if hasattr(payload, "model_dump") else payload.dict()
+    result = orchestrator.register_node(data)
     if not result.get("success"):
         return JSONResponse(status_code=400, content=result)
     return result
@@ -94,7 +95,8 @@ async def register_node(payload: RegisterNodePayload):
 
 @app.post("/api/telemetry/report")
 async def report_telemetry(payload: TelemetryPayload):
-    result = orchestrator.record_telemetry(payload.dict())
+    data = payload.model_dump() if hasattr(payload, "model_dump") else payload.dict()
+    result = orchestrator.record_telemetry(data)
     return result
 
 
@@ -117,7 +119,8 @@ async def start_fl_round():
 
 @app.post("/api/fl/submit-update")
 async def submit_fl_update(payload: FlUpdatePayload):
-    result = orchestrator.submit_fl_update(payload.dict())
+    data = payload.model_dump() if hasattr(payload, "model_dump") else payload.dict()
+    result = orchestrator.submit_fl_update(data)
     if not result.get("success"):
         return JSONResponse(status_code=400, content=result)
     return result
