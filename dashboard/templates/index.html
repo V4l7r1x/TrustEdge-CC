@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustEdge-CC | Confidential Federated Anomaly Detection</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <!-- Chart.js for high performance graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-left">
+      <div class="shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="project-title">TrustEdge-CC</h1>
+        <p class="project-subtitle">Confidential Federated Anomaly Detection &bull; Heterogeneous ARM TrustZone TEEs</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="badge-team">CY Dept &bull; Guided by Ms. Sindhya Mathew</div>
+      <div class="live-indicator">
+        <span class="pulsing-dot"></span>
+        <span id="orchestrator-status-text">ZERO-TRUST ACTIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <!-- Top KPI Ribbon -->
+    <section class="kpi-ribbon">
+      <div class="kpi-card">
+        <div class="kpi-label">FEDERATED ROUND</div>
+        <div class="kpi-value" id="kpi-current-round">0</div>
+        <div class="kpi-sub" id="kpi-fl-state">Status: Ready</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">GLOBAL MODEL TREES</div>
+        <div class="kpi-value" id="kpi-model-trees">0</div>
+        <div class="kpi-sub" id="kpi-model-memory">RAM: 0.0 KB (&lt; 160 KB)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">CONNECTED TEE NODES</div>
+        <div class="kpi-value" id="kpi-active-nodes">0 / 3</div>
+        <div class="kpi-sub">QEMU (Cortex-A) + Pico 2 (M33)</div>
+      </div>
+      <div class="kpi-card highlight-danger">
+        <div class="kpi-label">ATTACKS PREVENTED</div>
+        <div class="kpi-value" id="kpi-attacks-prevented">0</div>
+        <div class="kpi-sub" id="kpi-attacks-sim">0 Poisoning Attempts Dropped</div>
+      </div>
+    </section>
+
+    <!-- Main Grid: Left = Topology & Controls, Right = Live Telemetry & Charts -->
+    <div class="dashboard-grid">
+      <!-- Left Column: Heterogeneous TEE Topology -->
+      <div class="column-left">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h2>Heterogeneous TEE Node Topology</h2>
+            <button class="btn btn-primary" id="btn-start-fl" onclick="triggerFlRound()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Trigger FL Round
+            </button>
+          </div>
+          
+          <div class="nodes-container" id="nodes-list">
+            <!-- Dynamically populated or default placeholders -->
+            <div class="node-card empty-state">
+              <p>Scanning for edge nodes... Launch QEMU node or Pico 2 nodes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security & Poisoning Defense Testing Module -->
+        <div class="glass-panel attack-panel">
+          <div class="panel-header">
+            <h2>Zero-Trust Attack & Defense Verification</h2>
+            <span class="badge-pill">Paper Evaluation</span>
+          </div>
+          <p class="panel-desc">
+            Test the Zero-Trust Orchestrator's cryptographic gatekeeper. Submit poisoned model updates with forged signatures or corrupt weights to verify automatic rejection without impacting the global model.
+          </p>
+          <div class="attack-controls">
+            <select id="attack-target-node" class="select-styled">
+              <option value="">Select target edge node...</option>
+            </select>
+            <button class="btn btn-danger" onclick="simulatePoisoningAttack()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              </svg>
+              Simulate Poisoning Attack
+            </button>
+          </div>
+          <div id="attack-feedback-banner" class="feedback-banner hidden"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Real-time Telemetry & Anomaly Analytics -->
+      <div class="column-right">
+        <!-- Live Telemetry Charts -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h2>Edge Telemetry (DHT11 Sensor Stream)</h2>
+            <div class="legend-container">
+              <span class="legend-tag temp">Temperature (&deg;C)</span>
+              <span class="legend-tag hum">Humidity (%)</span>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="telemetryChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Anomaly Detection Score Stream -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h2>TEE In-Enclave Anomaly Score Stream</h2>
+            <div class="legend-container">
+              <span class="legend-tag score">Isolation Forest Score</span>
+              <span class="legend-tag threshold">Anomaly Threshold (0.58)</span>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="anomalyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Security Audit Log Console -->
+        <div class="glass-panel console-panel">
+          <div class="panel-header">
+            <h2>Zero-Trust Audit Log & Cryptographic Proofs</h2>
+            <button class="btn btn-subtle" onclick="clearAuditLog()">Clear</button>
+          </div>
+          <div class="terminal-logs" id="audit-log-terminal">
+            <div class="log-line info">[INIT] Listening for TEE attestations over mTLS/ECDSA...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span>TrustEdge-CC Framework &bull; RP2350 (TF-M TrustZone-M) + ARM Cortex-A (OP-TEE TrustZone-A)</span>
+    <span>Avesh V Pillai &bull; Gagan Pradeep &bull; Sajitha P S &bull; Sonu Biju</span>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
