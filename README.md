@@ -1,11 +1,10 @@
 # TrustEdge-CC: Confidential Federated Anomaly Detection for Resource-Constrained IoT Edge Networks Using Heterogeneous ARM TrustZone TEEs
 
-**Guided by:** Ms. Sindhya Mathew (Asst. Professor, CY Dept)  
 **Project Group Members:**
-- Sonu Biju (RIE23CC040)
-- Avesh V Pillai (RIE23CC013)
-- Gagan Pradeep (RIE23CC018)
-- Sajitha P S (RIE23CC038)
+- Sonu Biju 
+- Avesh V Pillai 
+- Gagan Pradeep 
+- Sajitha P S 
 
 ---
 
@@ -27,7 +26,7 @@
 +-----------------------+     +-----------------------+     +-----------------------+
 |       Node 1          |     |       Node 2          |     |       Node 3          |
 |      QEMU Node        |     |     Pico 1 Device     |     |     Pico 2 Device     |
-| (ARM Cortex-A TrustZone|     | (RP2350 TrustZone-M)  |     | (RP2350 TrustZone-M)  |
+|(ARM Cortex-A TrustZone|     | (RP2350 TrustZone-M)  |     | (RP2350 TrustZone-M)  |
 |       OP-TEE)         |     |        TF-M)          |     |        TF-M)          |
 | - Isolation Forest TA |     | - Isolation Forest    |     | - Isolation Forest    |
 | - Hardware-Sealed Key |     | - Sealed OTP Key      |     | - Sealed OTP Key      |
