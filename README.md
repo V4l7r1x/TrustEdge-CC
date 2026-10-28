@@ -142,3 +142,6 @@ The bridge auto-detects `/dev/ttyACM0` and relays sensor packets directly to the
 1. **Trigger FL Round:** Click **"Trigger FL Round"** on the dashboard. Watch each node train its local forest inside its TEE, sign with ECDSA, encrypt with AES-GCM, and watch the orchestrator aggregate them into the Global Model.
 2. **Inject Sensor Anomaly:** Click **"Toggle Sensor Anomaly"** on any node. Watch the in-enclave anomaly score spike above the `0.58` threshold and trigger the alert badge.
 3. **Simulate Poisoning Attack:** Click **"Simulate Poisoning Attack"**. An adversarial update with forged signatures is dispatched. Watch the Zero-Trust Orchestrator flag and drop it instantly without corrupting the global model!
+
+
+**Under Dev**
