@@ -1,11 +1,5 @@
 # TrustEdge-CC: Confidential Federated Anomaly Detection for Resource-Constrained IoT Edge Networks Using Heterogeneous ARM TrustZone TEEs
 
-**Project Group Members:**
-- Sonu Biju 
-- Avesh V Pillai 
-- Gagan Pradeep 
-- Sajitha P S 
-
 ---
 
 ## Architecture Overview
